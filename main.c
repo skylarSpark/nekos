@@ -1,4 +1,4 @@
-#include <vgastr.h>
+#include "vgastr.h"
 
 void main()
 {
