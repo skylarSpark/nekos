@@ -1,5 +1,6 @@
 # VS code log
 .vscode
+.DS_Store
 
 # Prerequisites
 *.d
