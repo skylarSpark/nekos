@@ -49,5 +49,5 @@ $(NEKOS_IMG): $(NEKOS_BIN)
 %.o : %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-qemu:
-	$(QEMU) -fda $(NEKOS_IMG) -boot a
+qemu: $(NEKOS_IMG)
+	$(QEMU) -fda $@ -boot a
