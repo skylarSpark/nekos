@@ -7,13 +7,13 @@ DD = dd
 RM = rm
 
 ASM		= nasm
-CC		= gcc
+CC		= gcc-i686-linux-gnu
 LD		= ld
 OBJCOPY	= objcopy
 QEMU	= qemu-system-i386
 
 ASMBFLAGS	= -f elf -w-orphan-labels
-CFLAGS		= -c -Os -std=c99 -march=i386 -Wall -Wshadow -W -Wconversion -Wno-sign-conversion  -fno-stack-protector -fomit-frame-pointer -fno-builtin -fno-common  -ffreestanding  -Wno-unused-parameter -Wunused-variable
+CFLAGS		= -c -Os -std=c99 -m32 -Wall -Wshadow -W -Wconversion -Wno-sign-conversion  -fno-stack-protector -fomit-frame-pointer -fno-builtin -fno-common  -ffreestanding  -Wno-unused-parameter -Wunused-variable
 LDFLAGS		= -s -static -T nekos.lds -n -Map NekOS.map 
 OJCYFLAGS	= -S -O binary
 
