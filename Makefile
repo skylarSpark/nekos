@@ -40,9 +40,9 @@ bin: $(NEKOS_BIN)
 $(NEKOS_BIN): $(NEKOS_ELF)
 	$(OBJCOPY) $(OJCYFLAGS) $< $@
 
-img: $(NEKOS_IMG)
-$(NEKOS_IMG): $(NEKOS_BIN)
-	$(DD) if=$< of=$@ bs=512
+#img: $(NEKOS_IMG)
+#$(NEKOS_IMG): $(NEKOS_BIN)
+#	$(DD) if=$< of=$@ bs=512
 
 %.o : %.asm
 	$(ASM) $(ASMBFLAGS) -o $@ $<
