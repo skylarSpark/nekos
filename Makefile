@@ -21,7 +21,7 @@ NEKOS_OBJS :=
 NEKOS_OBJS += entry.o main.o vgastr.o
 NEKOS_ELF = NekOS.elf
 NEKOS_BIN = NekOS.bin
-NEKOS_IMG = NekOS.img
+NEKOS_IMG = floppy.img
 
 .PHONY : build clean all link bin img
 
@@ -48,6 +48,12 @@ $(NEKOS_IMG): $(NEKOS_BIN)
 	$(ASM) $(ASMBFLAGS) -o $@ $<
 %.o : %.c
 	$(CC) $(CFLAGS) -o $@ $<
+
+update: $(NEKOS_BIN)
+	sudo mount floppy.img /mnt/kernel
+	sudo cp $< /mnt/kernel/hx_kernel
+	sleep 1
+	sudo umount /mnt/kernel
 
 qemu: $(NEKOS_IMG)
 	$(QEMU) -fda $< -boot a
