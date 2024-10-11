@@ -7,7 +7,7 @@ DD = dd
 RM = rm
 
 ASM		= nasm
-CC		= gcc-i686-linux-gnu
+CC		= gcc
 LD		= ld
 OBJCOPY	= objcopy
 QEMU	= qemu-system-i386
@@ -50,4 +50,4 @@ $(NEKOS_IMG): $(NEKOS_BIN)
 	$(CC) $(CFLAGS) -o $@ $<
 
 qemu: $(NEKOS_IMG)
-	$(QEMU) -fda $@ -boot a
+	$(QEMU) -fda $< -boot a
