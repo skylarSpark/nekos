@@ -51,7 +51,7 @@ $(NEKOS_IMG): $(NEKOS_BIN)
 
 update: $(NEKOS_BIN)
 	sudo mount floppy.img /mnt/kernel
-	sudo cp $< /mnt/kernel/hx_kernel
+	sudo cp $< /mnt/kernel/nk_kernel
 	sleep 1
 	sudo umount /mnt/kernel
 
