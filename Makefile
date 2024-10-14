@@ -10,7 +10,7 @@ ASM		= nasm
 CC		= gcc
 LD		= ld
 OBJCOPY	= objcopy
-QEMU	= qemu-system-i386
+QEMU	= qemu-system-x86_64
 
 ASMBFLAGS	= -f elf -w-orphan-labels
 CFLAGS		= -c -Os -std=c99 -m32 -Wall -Wshadow -W -Wconversion -Wno-sign-conversion  -fno-stack-protector -fomit-frame-pointer -fno-builtin -fno-common  -ffreestanding  -Wno-unused-parameter -Wunused-variable
@@ -21,7 +21,7 @@ NEKOS_OBJS :=
 NEKOS_OBJS += entry.o main.o vgastr.o
 NEKOS_ELF = NekOS.elf
 NEKOS_BIN = NekOS.bin
-NEKOS_IMG = floppy.img
+NEKOS_IMG = hd.img
 
 .PHONY : build clean all link bin img
 
@@ -49,11 +49,11 @@ $(NEKOS_BIN): $(NEKOS_ELF)
 %.o : %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-update: $(NEKOS_BIN)
-	sudo mount floppy.img /mnt/kernel
-	sudo cp $< /mnt/kernel/nk_kernel
-	sleep 1
-	sudo umount /mnt/kernel
+#update: $(NEKOS_BIN)
+#	sudo mount floppy.img /mnt/kernel
+#	sudo cp $< /mnt/kernel/nk_kernel
+#	sleep 1
+#	sudo umount /mnt/kernel
 
 qemu: $(NEKOS_IMG)
-	$(QEMU) -fda $< -boot a
+	$(QEMU) -drive file= $<,format=raw -boot c
