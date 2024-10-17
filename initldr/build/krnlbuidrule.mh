@@ -1,0 +1,28 @@
+###################################################################
+#		Kernel Automatic Build Rules Header
+#		Chris OCT. 17 2024
+###################################################################
+
+CCSTR		= 	'CC -[M] Building... '$<
+PRINTCSTR 	=	@echo $(CCSTR) 
+
+%.o : $(CCBUILDPATH)%.asm
+	$(ASM) $(ASMBFLAGS) -o $@ $<
+	@echo 'AS -[M] Building...' $<
+%.o : $(CCBUILDPATH)%.c
+	$(CC) $(BTCFLAGS) -o $@ $<
+	$(PRINTCSTR) 
+%.lds : $(CCBUILDPATH)%.S
+	$(CC) $(CPPFLGSLDS) -o $@ $<
+	$(PRINTCSTR)
+
+%.mh : $(CCBUILDPATH)%.S
+	$(CC) $(CPPFLGSLDS) -o $@ $<
+	$(PRINTCSTR)
+
+%.lib : $(CCBUILDPATH)%.c
+	$(CC) $(CFLAGS) -o $@ $<
+	$(PRINTCSTR)
+%.lib : $(CCBUILDPATH)%.asm
+	$(ASM) $(ASMKFLAGS) -o $@ $<
+	@echo 'AS -[M] Building...' $< 
