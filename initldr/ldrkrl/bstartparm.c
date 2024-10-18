@@ -28,7 +28,7 @@ void init_bstartparm()
 {
     machbstart_t* mbsp = MBSPADR;
     machbstart_t_init(mbsp);
-    init_chkcpu();
+    init_chkcpu(mbsp);
     init_mem(mbsp);
     if (0 == get_wt_imgfilesz(mbsp))
     {
