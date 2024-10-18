@@ -285,3 +285,20 @@ e820map_t *chk_memsize(e820map_t *e8p, u32_t enr, u64_t sadr, u64_t size)
     }
     return NULL;
 }
+
+u64_t get_memsize(e820map_t *e8p, u32_t enr)
+{
+    u64_t len = 0;
+    if (enr == 0 || e8p == NULL)
+    {
+        return 0;
+    }
+    for (u32_t i = 0; i < enr; i++)
+    {
+        if (e8p[i].type == RAM_USABLE)
+        {
+            len += e8p[i].lsize;
+        }
+    }
+    return len;
+}

@@ -159,3 +159,39 @@ ok_l:
     }
     return &fhdscstart[rethn];
 }
+
+u64_t get_filesz(char_t *filenm, machbstart_t *mbsp)
+{
+    if (filenm == NULL || mbsp == NULL)
+    {
+        return 0;
+    }
+    fhdsc_t *fhdscstart = get_fileinfo(filenm, mbsp);
+    if (fhdscstart == NULL)
+    {
+        return 0;
+    }
+    return fhdscstart->fhd_frealsz;
+}
+
+u64_t get_wt_imgfilesz(machbstart_t *mbsp)
+{
+    u64_t retsz = LDRFILEADR;
+    mlosrddsc_t *mrddadrs = MRDDSC_ADR;
+    if (mrddadrs->mdc_endgic != MDC_ENDGIC ||
+        mrddadrs->mdc_rv != MDC_RVGIC ||
+        mrddadrs->mdc_fhdnr < 2 ||
+        mrddadrs->mdc_filnr < 2)
+    {
+        return 0;
+    }
+    if (mrddadrs->mdc_filbk_e < 0x4000)
+    {
+        return 0;
+    }
+    retsz += mrddadrs->mdc_filbk_e;
+    retsz -= LDRFILEADR;
+    mbsp->mb_imgpadr = LDRFILEADR;
+    mbsp->mb_imgsz = retsz;
+    return retsz;
+}
