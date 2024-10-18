@@ -121,6 +121,69 @@ func_table:
         dw _getvbeonemodeinfo
         dw _setvbemode
 
+_getvbemode:
+        push es
+        push ax
+        push di
+        mov di,VBEINFO_ADR
+        mov ax,0
+        mov es,ax
+        mov ax,0x4f00
+        int 0x10
+        cmp ax,0x004f
+        jz .ok
+        mov ax,getvbmodeerrmsg
+        call DispStr
+        jmp $
+ .ok:
+        pop di
+        pop ax
+        pop es
+        ret
+_getvbeonemodeinfo:
+        push es
+        push ax
+        push di
+        push cx
+        mov di,VBEMINFO_ADR
+        mov ax,0
+        mov es,ax
+        mov cx,0x118
+        mov ax,0x4f01
+        int 0x10
+        cmp ax,0x004f
+        jz .ok
+        mov ax,getvbmodinfoeerrmsg
+        call DispStr
+        jmp $
+ .ok:
+        pop cx
+        pop di
+        pop ax
+        pop es
+        ret
+_setvbemode:
+        push ax
+        push bx
+        mov bx,0x4118
+        mov ax,0x4f02
+        int 0x10
+        cmp ax,0x004f
+        jz .ok
+        mov ax,setvbmodeerrmsg
+        call DispStr
+        jmp $
+ .ok:
+        pop bx
+        pop ax
+        ret
+disable_nmi:
+	push ax
+	in al, 0x70     ; port 0x70NMI_EN_PORT
+	or al, 0x80	; disable all NMI source
+	out 0x70,al	; NMI_EN_PORT
+	pop ax
+	ret
 
 int131errmsg: db     "int 13 read hdsk  error"
         db 0
