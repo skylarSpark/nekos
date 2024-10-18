@@ -71,9 +71,9 @@ _32bits_mode:
     xor ebp, ebp
     xor esp, esp
     ; init stack
-    mov esp, 0x7c00     // magic number for boot
+    mov esp, 0x7c00     ; magic number for boot
     call inithead_entry
-    jmp 0x200000        // jump to initldrkrl
+    jmp 0x200000        ; jump to initldrkrl
 
 GDT_START:
 knull_dsc: dq 0
