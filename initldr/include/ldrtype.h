@@ -1,5 +1,5 @@
-#ifndef LDRTYPE.H
-#define LDRTYPE.H
+#ifndef _LDRTYPE_H
+#define _LDRTYPE_H
 
 #define FHDSC_NMAX 192
 #define FHDSC_SZMAX 256
