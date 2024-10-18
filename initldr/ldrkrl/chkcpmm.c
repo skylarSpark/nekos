@@ -1,5 +1,100 @@
 #include "cmctl.h"
 
+unsigned int acpi_get_bios_ebda()
+{
+
+    unsigned int address = *(unsigned short *)0x40E;
+    address <<= 4;
+    return address;
+}
+
+int acpi_checksum(unsigned char *ap, s32_t len)
+{
+    int sum = 0;
+    while (len--)
+    {
+        sum += *ap++;
+    }
+    return sum & 0xFF;
+}
+
+mrsdp_t *acpi_rsdp_isok(mrsdp_t *rdp)
+{
+
+    if (rdp->rp_len == 0 || rdp->rp_revn == 0)
+    {
+        return NULL;
+    }
+    if (0 == acpi_checksum((unsigned char *)rdp, (s32_t)rdp->rp_len))
+    {
+
+        return rdp;
+    }
+
+    return NULL;
+}
+
+mrsdp_t *findacpi_rsdp_core(void *findstart, u32_t findlen)
+{
+    if (NULL == findstart || 1024 > findlen)
+    {
+        return NULL;
+    }
+
+    u8_t *tmpdp = (u8_t *)findstart;
+
+    mrsdp_t *retdrp = NULL;
+    for (u64_t i = 0; i <= findlen; i++)
+    {
+
+        if (('R' == tmpdp[i]) && ('S' == tmpdp[i + 1]) && ('D' == tmpdp[i + 2]) && (' ' == tmpdp[i + 3]) &&
+            ('P' == tmpdp[i + 4]) && ('T' == tmpdp[i + 5]) && ('R' == tmpdp[i + 6]) && (' ' == tmpdp[i + 7]))
+        {
+            retdrp = acpi_rsdp_isok((mrsdp_t *)(&tmpdp[i]));
+            if (NULL != retdrp)
+            {
+                return retdrp;
+            }
+        }
+    }
+    return NULL;
+}
+
+PUBLIC mrsdp_t *find_acpi_rsdp()
+{
+
+    void *fndp = (void *)acpi_get_bios_ebda();
+    mrsdp_t *rdp = findacpi_rsdp_core(fndp, 1024);
+    if (NULL != rdp)
+    {
+        return rdp;
+    }
+    //0E0000h和0FFFFFH
+    fndp = (void *)(0xe0000);
+    rdp = findacpi_rsdp_core(fndp, (0xfffff - 0xe0000));
+    if (NULL != rdp)
+    {
+        return rdp;
+    }
+    return NULL;
+}
+
+PUBLIC void init_acpi(machbstart_t *mbsp)
+{
+    mrsdp_t *rdp = NULL;
+    rdp = find_acpi_rsdp();
+    if (NULL == rdp)
+    {
+        kerror("Your computer is not support ACPI!!");
+    }
+    m2mcopy(rdp, &mbsp->mb_mrsdp, (sint_t)((sizeof(mrsdp_t))));
+    if (acpi_rsdp_isok(&mbsp->mb_mrsdp) == NULL)
+    {
+        kerror("Your computer is not support ACPI!!");
+    }
+    return;
+}
+
 /*
  * main fuction for checking CPU
 */
