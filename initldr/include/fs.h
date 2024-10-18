@@ -9,9 +9,9 @@ void get_file_rpadrandsz(char_t *fname, machbstart_t* mbsp,u32_t* retadr,u32_t* 
 u64_t get_filesz(char_t* filenm,machbstart_t* mbsp);
 u64_t get_wt_imgfilesz(machbstart_t* mbsp);
 u64_t r_file_to_padr(machbstart_t* mbsp,u32_t f2adr,char_t* fnm);
-void set_rwhdhdpack(rwhdpach_t* setp,u8_t sn,u16_t off,u16_t seg,u32_t lbal,u32_t lbah);
-void* read_sector(u64_t sector);
-void ret_mbr();
-int is_part(dpt_t* isp);
-u64_t ret_imgfilesz();
+// void set_rwhdhdpack(rwhdpach_t* setp,u8_t sn,u16_t off,u16_t seg,u32_t lbal,u32_t lbah);
+// void* read_sector(u64_t sector);
+// void ret_mbr();
+// int is_part(dpt_t* isp);
+// u64_t ret_imgfilesz();
 #endif // FS_H
