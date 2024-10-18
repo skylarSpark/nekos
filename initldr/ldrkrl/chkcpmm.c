@@ -266,7 +266,7 @@ int chk_cpu_longmode()
     return rets;
 }
 
-e820map_t *chk_memsize(e820map_t *e8p, uint_t enr, u64_t sadr, u64_t size)
+e820map_t *chk_memsize(e820map_t *e8p, u32_t enr, u64_t sadr, u64_t size)
 {
     u64_t len = sadr + size;
     if (enr == 0 || e8p == NULL)
