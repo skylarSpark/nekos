@@ -25,7 +25,7 @@ build: clean print all
 all:
 	$(MAKE) $(INITLDRMFLGS)
 	$(MAKE) $(INITLDRLINKMFLGS)
-	@echo 'Congraulations! Initldr compiled and built! ^_^'
+	@echo 'Congratulations! Initldr compiled and built! ^_^'
 clean:
 	$(CD) $(BUILD_PATH); $(RM) -f *.o *.bin *.i *.krnl *.s *.map *.lib *.btoj *.vdi *vmdk *.eki *.elf
 	@echo 'Initldr: Cleaned up all built files... ^_^'

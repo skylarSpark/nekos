@@ -9,45 +9,76 @@ RM = rm
 ASM		= nasm
 CC		= gcc
 LD		= ld
+MAKE	= make
 OBJCOPY	= objcopy
 QEMU	= qemu-system-x86_64
 
-ASMBFLAGS	= -f elf -w-orphan-labels
-CFLAGS		= -c -Os -std=c99 -m32 -Wall -Wshadow -W -Wconversion -Wno-sign-conversion  -fno-stack-protector -fomit-frame-pointer -fno-builtin -fno-common  -ffreestanding  -Wno-unused-parameter -Wunused-variable
-LDFLAGS		= -s -static -T nekos.lds -n -Map NekOS.map 
-OJCYFLAGS	= -S -O binary
+LKIMG = ./lmoskrlimg -m k
+X86BARD = -f ./Makefile.x86
 
-NEKOS_OBJS :=
-NEKOS_OBJS += entry.o main.o vgastr.o
-NEKOS_ELF = NekOS.elf
-NEKOS_BIN = NekOS.bin
+VVMRLMOSFLGS = -C $(BUILD_PATH) -f vbox.mkf
+
+LOGOFILE = logo.bmp
+FONTFILE = font.fnt
+BUILD_PATH = ./build
+EXKNL_PATH = ./exckrnl
+DSTPATH = ../exckrnl
+RELEDSTPATH = ../release
+INITLDR_BUILD_PATH =./initldr/build/
+INITLDR_PATH =./initldr/
+CPLILDR_PATH =./release/
+INSTALL_PATH =/boot/
+INSTALLSRCFILE_PATH =./release/Cosmos.eki
+SRCFILE = $(BOOTEXCIMG) $(KRNLEXCIMG) $(LDEREXCIMG) $(SHELEXCIMG)
+RSRCFILE = $(BOOTEXCIMG) $(KRNLEXCIMG) $(LDEREXCIMG) $(SHELEXCIMG)
+
+IMGSECTNR = 204800
+NEKOS_BIN = Nekos.bin
 NEKOS_IMG = hd.img
 
-.PHONY : build clean all link bin img
+INITLDRIMH = initldrimh.bin
+INITLDRKRL = initldrkrl.bin
+INITLDRSVE = initldrsve.bin
 
-all: clean build link bin img
+VMFLAGES = -smp 4 -hda $(NEKOS_IMG) -m 256 -enable-kvm
+
+CPLILDRSRC= $(INITLDR_BUILD_PATH)$(INITLDRSVE) $(INITLDR_BUILD_PATH)$(INITLDRKRL) $(INITLDR_BUILD_PATH)$(INITLDRIMH)
+
+.PHONY : build print clean all link bin createimg
+
+all:
+	$(MAKE) $(X86BARD)
+	@echo 'Congratulations, the system is successfully compiled and built! :P'
 
 clean:
-	$(RM) -f *.o *.bin *.elf
+	$(CD) $(INITLDR_PATH); $(MAKE) clean
+	$(CD) $(BUILD_PATH); $(RM) -f *.o *.bin *.i *.krnl *.s *.map *.lib *.btoj *.vdi *.elf *vmdk *.lds *.mk *.mki krnlobjs.mh
+	$(CD) $(EXKNL_PATH); $(RM) -f *.o *.bin *.i *.krnl *.s *.map *.lib *.btoj *.vdi *.elf *vmdk *.lds *.mk *.mki krnlobjs.mh
+	$(CD) $(CPLILDR_PATH); $(RM) -f *.o *.bin *.i *.krnl *.s *.eki *.map *.lib *.btoj *.elf *.vdi *vmdk *.lds *.mk *.mki krnlobjs.mh
+	@echo 'Cleaned up all built files... ^_^'
 
-build: $(NEKOS_OBJS)
+print:
+	@echo '********* starting compiling and building *************'
 
-link: $(NEKOS_ELF)
-$(NEKOS_ELF): $(NEKOS_OBJS)
-	$(LD) $(LDFLAGS) -o $@ $(NEKOS_OBJS)
+build: clean print all
 
-bin: $(NEKOS_BIN)
-$(NEKOS_BIN): $(NEKOS_ELF)
-	$(OBJCOPY) $(OJCYFLAGS) $< $@
 
-#img: $(NEKOS_IMG)
-#$(NEKOS_IMG): $(NEKOS_BIN)
-#	$(DD) if=$< of=$@ bs=512
+cplmildr:
+	$(CP) $(CPFLAGES) $(CPLILDRSRC) $(CPLILDR_PATH)
+cpkrnl:
+	$(CD) $(BUILD_PATH) && $(CP) $(CPFLAGES) $(SRCFILE) $(DSTPATH)
+cprelease:
+	$(CD) $(EXKNL_PATH) && $(CP) $(CPFLAGES) $(RSRCFILE) $(RELEDSTPATH)
 
-%.o : %.asm
-	$(ASM) $(ASMBFLAGS) -o $@ $<
-%.o : %.c
-	$(CC) $(CFLAGS) -o $@ $<
+release: clean all cplmildr cpkrnl cprelease KIMG
+
+KIMG:
+	@echo 'Genrating NekOS kernel img file.....'
+	$(CD) $(CPLILDR_PATH) && $(LKIMG) -lhf $(INITLDRIMH) -o Cosmos.eki -f $(LKIMG_INFILE)
+
+
+createimg:
+	$(DD) if=/dev/zero of=$(DSKIMG) count=$(IMGSECTNR) bs=512
 
 #update: $(NEKOS_BIN)
 #	sudo mount floppy.img /mnt/kernel
@@ -55,5 +86,7 @@ $(NEKOS_BIN): $(NEKOS_ELF)
 #	sleep 1
 #	sudo umount /mnt/kernel
 
-qemu: $(NEKOS_IMG)
-	$(QEMU) -drive file= $<,format=raw -boot c
+QEMURUN:
+	$(MAKE) $(VVMRLMOSFLGS)
+
+qemu: release QEMURUN
