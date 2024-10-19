@@ -1,0 +1,34 @@
+###################################################################
+#		krnlbuidrule Compile Configuration Makefile		  #
+#		Chris OCT 19 2024		
+###################################################################
+
+CCSTR		= 	'CC -[M] Building... '$<
+PRINTCSTR 	=	@echo $(CCSTR) 
+
+%.krnl : $(CCBUILDPATH)%.c
+[$(CC) $(CFLAGS) -o $@ $<
+[$(PRINTCSTR)
+%.krnl : $(CCBUILDPATH)%.S
+[$(CC) $(CFLAGS) -o $@ $<
+[$(PRINTCSTR)
+%.o : $(CCBUILDPATH)%.asm
+[$(ASM) $(ASMFLGS) -o $@ $<
+[$(PRINTCSTR)
+%.o : $(CCBUILDPATH)%.c
+[$(CC) $(CFLAGS) -o $@ $<
+[$(PRINTCSTR)
+%.o : $(CCBUILDPATH)%.S
+[$(CC) $(CFLAGS) -o $@ $<
+[$(PRINTCSTR)	
+%.lds : $(CCBUILDPATH)%.S
+[$(CC) $(CPPFLGSLDS) -o $@ $<
+[$(PRINTCSTR)
+
+%.mkh : $(CCBUILDPATH)%.S
+[$(CC) $(CPPFLGSLDS) -o $@ $<
+[$(PRINTCSTR)
+
+%.mk : $(CCBUILDPATH)%.S
+[$(CC) $(CPPFLGSLDS) -o $@ $<
+[$(PRINTCSTR)
