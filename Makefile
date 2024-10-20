@@ -44,7 +44,7 @@ VMFLAGES = -smp 4 -hda $(NEKOS_IMG) -m 256 -enable-kvm
 
 CPLILDRSRC= $(INITLDR_BUILD_PATH)$(INITLDRSVE) $(INITLDR_BUILD_PATH)$(INITLDRKRL) $(INITLDR_BUILD_PATH)$(INITLDRIMH)
 
-.PHONY : build print clean all link bin createimg
+.PHONY : build print clean all link bin cplmildr cpkrnl cprelease release createimg
 
 all:
 	$(MAKE) $(X86BARD)
