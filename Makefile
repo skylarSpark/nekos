@@ -87,6 +87,6 @@ createimg:
 #	sudo umount /mnt/kernel
 
 QEMURUN:
-	$(MAKE) $(VVMRLMOSFLGS)
+	$(MAKE) $(VMFLAGES)
 
 qemu: release QEMURUN
